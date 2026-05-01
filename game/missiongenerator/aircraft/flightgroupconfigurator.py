@@ -18,6 +18,7 @@ from game.ato import Flight, FlightType
 from game.ato.flightplans.shiprecoverytanker import RecoveryTankerFlightPlan
 from game.callsigns import callsign_for_support_unit
 from game.data.weapons import Pylon, WeaponType
+from game.lasercodes.lasercode import LaserCode
 from game.missiongenerator.logisticsgenerator import LogisticsGenerator
 from game.missiongenerator.missiondata import MissionData, AwacsInfo, TankerInfo
 from game.radio.radios import RadioFrequency, RadioRegistry
@@ -28,6 +29,7 @@ from game.radio.tacan import (
     OutOfTacanChannelsError,
 )
 from game.runways import RunwayData
+from game.missiongenerator.missiondata import EscortInfo
 from game.squadrons import Pilot
 from .aircraftbehavior import AircraftBehavior
 from .aircraftpainter import AircraftPainter
@@ -145,7 +147,7 @@ class FlightGroupConfigurator:
             self.flight.flight_plan.waypoints,
         )
 
-        return FlightData(
+        flight_data = FlightData(
             package=self.flight.package,
             aircraft_type=self.flight.unit_type,
             squadron=self.flight.squadron,
@@ -167,6 +169,42 @@ class FlightGroupConfigurator:
             joker_fuel=bingo_estimator.estimate_joker(),
             custom_name=self.flight.custom_name,
             laser_codes=laser_codes,
+        )
+
+        self.register_escort_leash()
+
+        return flight_data
+
+    def register_escort_leash(self) -> None:
+        if self.flight.flight_type not in [
+            FlightType.ESCORT,
+            FlightType.SEAD_ESCORT,
+        ]:
+            return
+
+        if self.flight.package.primary_flight is None:
+            return
+
+        escort_group_id = self.flight.group_id
+        escorted_group_id = self.flight.package.primary_flight.group_id
+        if escort_group_id <= 0 or escorted_group_id <= 0:
+            return
+
+        engagement_range = (
+            self.flight.coalition.doctrine.sead_escort_engagement_range
+            if self.flight.flight_type == FlightType.SEAD_ESCORT
+            else self.flight.coalition.doctrine.escort_engagement_range
+        ).meters
+
+        if self.flight.is_helo:
+            engagement_range *= 0.25
+
+        self.mission_data.escorts.append(
+            EscortInfo(
+                escort_group_id=escort_group_id,
+                escorted_group_id=escorted_group_id,
+                engagement_range_meters=int(engagement_range),
+            )
         )
 
     def configure_flight_member(
@@ -397,9 +435,24 @@ class FlightGroupConfigurator:
             if weapon is None:
                 continue
             pylon = Pylon.for_aircraft(self.flight.unit_type, pylon_number)
-            # Get weapon settings for this pylon if they exist
-            settings = loadout.pylon_settings.get(pylon_number)
+            settings = self._merge_laser_code(
+                loadout.pylon_settings.get(pylon_number),
+                weapon.accepts_laser_code(),
+                member.weapon_laser_code,
+            )
             pylon.equip(unit, weapon, settings)
+
+    @staticmethod
+    def _merge_laser_code(
+        base: Optional[dict[str, Any]],
+        accepts_laser_code: bool,
+        laser_code: Optional[LaserCode],
+    ) -> Optional[dict[str, Any]]:
+        if laser_code is None or not accepts_laser_code:
+            return base
+        settings = dict(base or {})
+        settings["laser_code"] = laser_code.code
+        return settings
 
     def setup_fuel(self) -> None:
         fuel = self.flight.state.estimate_fuel()

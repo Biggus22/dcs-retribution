@@ -52,7 +52,16 @@ class LuaGenerator:
         install_path = lua_data.add_item("installPath")
         install_path.set_value(os.path.abspath("."))
 
-        lua_data.add_item("Airbases")
+        airbases_object = lua_data.add_item("Airbases")
+        for runway in self.mission_data.runways:
+            if runway.tacan is not None:
+                airbase_item = airbases_object.add_item()
+                airbase_item.add_key_value("name", runway.airfield_name)
+                airbase_item.add_key_value("tacan", str(runway.tacan))
+                airbase_item.add_key_value(
+                    "tacan_callsign", runway.tacan_callsign or ""
+                )
+
         carriers_object = lua_data.add_item("Carriers")
 
         for carrier in self.mission_data.carriers:
@@ -272,6 +281,15 @@ class LuaGenerator:
             for client_unit in flight.client_units:
                 forward_observer = forward_observer_object.add_item()
                 forward_observer.add_key_value("unitName", client_unit.name)
+
+        escorts_object = lua_data.add_item("Escorts")
+        for escort in self.mission_data.escorts:
+            escort_item = escorts_object.add_item()
+            escort_item.add_key_value("escortGroupId", str(escort.escort_group_id))
+            escort_item.add_key_value("escortedGroupId", str(escort.escorted_group_id))
+            escort_item.add_key_value(
+                "engagementRangeMeters", str(escort.engagement_range_meters)
+            )
 
         trigger = TriggerStart(comment="Set DCS Retribution data")
         trigger.add_action(DoScript(String(lua_data.create_operations_lua())))

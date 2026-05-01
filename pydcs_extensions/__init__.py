@@ -35,6 +35,7 @@ from .super_etendard import *
 from .sk60 import *
 from .su15 import *
 from .su30 import *
+from .su35s import *
 from .su57 import *
 from .swedishmilitaryassetspack import *
 from .coldwarassets import *
@@ -43,6 +44,7 @@ from .vietnamwarvessels import *
 from .chinesemilitaryassetspack import *
 from .russianmilitaryassetspack import *
 from .usamilitaryassetspack import *
+from .ukmilitaryassetspack import *
 from .ukrainemilitaryassetspack import *
 from .tornado_adv import *
 from .VSN_F35 import *

@@ -1,3 +1,20 @@
+# Retribution v1.6.0
+
+## Features/Improvements
+* **[UX]** Avoid having escorts from wondering off too far while chasing a target.
+* **[UX]** Improved fast-forward settings with the ability to skip combat.
+* **[Data]** Add Refueling/Recovery tasks to A-6E Intruder mod
+* **[Modding]** Add CurrentHill UK Assets Pack support (v1.1.2)
+* **[Layouts]** Add signature to layouts' binary file for automatic reloading of updated layouts.
+* **[Modding]** Add support for Su-35S mod (v2.0.27b)
+* **[Plugins]** Update EW Script to version 2.1
+* **[Options]** New option to spawn TACAN beacons at captured airfields
+
+## Fixes
+* **[Performance]** Improved robustness w.r.t. state.json handling to avoid corruption and thus save loss.
+* **[Flight Plans]** Stabilized waypoint solver debug GeoJSON coordinate precision to avoid platform-specific floating point drift in debug output.
+* **[Mission Generation]** Assign plane-specific laser codes to LGB weapons when building the mission
+
 # Retribution v1.5.0
 
 ## Features/Improvements

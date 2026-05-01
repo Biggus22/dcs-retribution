@@ -103,6 +103,7 @@ class ModSettings:
     super_etendard: bool = False
     su15_flagon: bool = False
     su30_flanker_h: bool = False
+    su35s_flanker_m: bool = False
     su57_felon: bool = False
     tornado_adv: bool = False
     frenchpack: bool = False
@@ -116,6 +117,7 @@ class ModSettings:
     chinesemilitaryassetspack: bool = False
     russianmilitaryassetspack: bool = False
     usamilitaryassetspack: bool = False
+    ukmilitaryassetspack: bool = False
     ukrainemilitaryassetspack: bool = False
     mig31bm_foxhound: bool = False
     VSN_F35: bool = False

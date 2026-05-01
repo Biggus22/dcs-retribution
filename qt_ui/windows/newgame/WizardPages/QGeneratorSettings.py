@@ -146,6 +146,8 @@ class GeneratorOptions(QtWidgets.QWizardPage):
         self.registerField("su15_flagon", self.su15_flagon)
         self.su30_flanker_h = QtWidgets.QCheckBox()
         self.registerField("su30_flanker_h", self.su30_flanker_h)
+        self.su35s_flanker_m = QtWidgets.QCheckBox()
+        self.registerField("su35s_flanker_m", self.su35s_flanker_m)
         self.su57_felon = QtWidgets.QCheckBox()
         self.registerField("su57_felon", self.su57_felon)
         self.ov10a_bronco = QtWidgets.QCheckBox()
@@ -172,6 +174,8 @@ class GeneratorOptions(QtWidgets.QWizardPage):
         self.registerField("russianmilitaryassetspack", self.russianmilitaryassetspack)
         self.usamilitaryassetspack = QtWidgets.QCheckBox()
         self.registerField("usamilitaryassetspack", self.usamilitaryassetspack)
+        self.ukmilitaryassetspack = QtWidgets.QCheckBox()
+        self.registerField("ukmilitaryassetspack", self.ukmilitaryassetspack)
         self.ukrainemilitaryassetspack = QtWidgets.QCheckBox()
         self.registerField("ukrainemilitaryassetspack", self.ukrainemilitaryassetspack)
         self.mig31bm_foxhound = QtWidgets.QCheckBox()
@@ -216,6 +220,10 @@ class GeneratorOptions(QtWidgets.QWizardPage):
                 self.usamilitaryassetspack,
             ),
             (
+                "CurrentHill UK Military Assets pack (1.1.2)",
+                self.ukmilitaryassetspack,
+            ),
+            (
                 "CurrentHill Ukraine Military Assets pack (1.1.1)",
                 self.ukrainemilitaryassetspack,
             ),
@@ -252,6 +260,7 @@ class GeneratorOptions(QtWidgets.QWizardPage):
             ("Star Wars Modpack 2.54+", self.SWPack),
             ("Su-15 Flagon (v1.0)", self.su15_flagon),
             ("Su-30 Flanker-H (v2.8.04b + CWS 3.72)", self.su30_flanker_h),
+            ("Su-35S Flanker-M (v2.0.27b)", self.su35s_flanker_m),
             ("Su-57 Felon (build-04)", self.su57_felon),
             ("Super Étendard (v2.5.5)", self.super_etendard),
             ("Tornado F3 ADV (1.0)", self.tornado_adv),
@@ -336,6 +345,7 @@ class GeneratorOptions(QtWidgets.QWizardPage):
             s.get("russianmilitaryassetspack", False)
         )
         self.usamilitaryassetspack.setChecked(s.get("usamilitaryassetspack", False))
+        self.ukmilitaryassetspack.setChecked(s.get("ukmilitaryassetspack", False))
         self.ukrainemilitaryassetspack.setChecked(
             s.get("ukrainemilitaryassetspack", False)
         )
